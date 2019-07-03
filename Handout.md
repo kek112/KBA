@@ -1,3 +1,12 @@
+Handout für Konzeption betrieblicher Anwendungssysteme
+Übersicht für 
+* Ansible
+* Icinga
+* Proxmox
+* ISPConfig
+* AWS
+* Terraform
+
 ### Ansible
 Konfigurationssprache für Server, Infrastruktur/SDN 
 
@@ -110,7 +119,81 @@ Tasks
 
 ----------------------------------------------------------------------
 #### Icinga
+https://icinga.com/ 
+Monitoring für Webseiten und Infrastruktur
+https://github.com/jjethwa/icinga2/blob/master/docker-compose.yml
+conf Dateien
+
+``` Conf
+object Host "virtual" {
+  import "generic-host"
+  display_name  = "Virtual host for checks"
+  check_command = "dummy"
+  vars.dummy_state = 0
+  vars.dummy_text = "Host can not be pinged, should be up, hopefully..."
+
+  vars.virtual_http["posttresor LIVE"] = {
+    http_host = "www.domain.de"
+    http_onredirect = "follow"
+    http_string = "Hier ist Ihre Domain"
+    http_ssl = true
+  }
+
+}
+
+apply Dependency "disable-host-service-checks" to Service {
+  disable_checks = true
+  parent_service_name = "ping4"
+  ignore_soft_states = false
+  assign where true
+  ignore where host.name == "virtual"
+  ignore where host.name == "DomainChecker"
+  ignore where host.name == "server.domain.de"
+}
+
+```
 #### Proxmox
+Virtualisierungsumgebung
+https://www.proxmox.com/de/
+automatisiertes aufsetzen über 
+https://github.com/inoxio/ansible-role-proxmox-vms
+
 #### ISPConfig
+Hosting Control panel
+https://www.ispconfig.org 
+
 ### AWS
+Cloud Platform
+https://aws.amazon.com/de/# 
+S3
+
+* Simple Storage Service 
+* virtuelle Festplatte
+
+EC2
+ * Elastic Compute Cloud
+ * Stellt virtuelle Maschinen bereit 
+ * automatische Befüllung mit Daten
+ 
+ECR
+ * Elastic Container Registry
+ * lagert Docker Images ein und stellt diese bereit 
+ 
+RDS
+ * Relation Database Systems
+ * Datenbank für untershiedlichste Systeme
+ 
+VPC
+ * Virtual Private Cloud
+ * IP Adressräume für AWS Regionen/Availability Zone
+ 
+Cloud Front
+ * Content-Delivery Service
+ * stellt verschiedenste Dienste zum deployment bereit 
+ * 
+
 #### Terraform
+Infrastructure as Code 
+Module
+https://www.terraform.io/docs/configuration/modules.html 
+Reproduzierbare Infrastruktur
