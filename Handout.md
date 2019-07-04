@@ -197,3 +197,9 @@ Infrastructure as Code
 Module
 https://www.terraform.io/docs/configuration/modules.html 
 Reproduzierbare Infrastruktur
+
+``` Terraform
+terraform plan
+terraform init
+terrafrom apply
+```
